@@ -1,0 +1,16 @@
+/.ruff_cache
+/.env
+/charisma/__pycache__
+/charisma/scenario_generation/__pycache__
+/charisma/interaction_generation/__pycache__
+logs/*.log
+charisma/scenario_generation/evaluation/__pycache__
+charisma/setup_goals/__pycache__
+/charisma/evaluation/__pycache__
+/app/__pycache__
+/app/components/__pycache__
+/app/models/__pycache__
+/app/config/__pycache__
+/app/services/__pycache__
+/app/.streamlit/secrets.toml
+/.streamlit/secrets.toml
