@@ -1,5 +1,7 @@
 import os
 import pandas as pd
+import ast
+import json
 from logging import getLogger
 from charisma.evaluation.prompts import evaluation_prompt
 
@@ -42,23 +44,34 @@ def evaluation(
                 "first_agent_role": row["agent1_role"],
                 "second_agent_role": row["agent2_role"],
             }
+            scenario = ast.literal_eval(row["scenario"])['scenario_context']
             interaction = row["interaction_history"] 
+            interaction_history = ast.literal_eval(row["interaction_history"])
+            interaction = [{"agent": d["agent"], "response": d["response"]} for d in interaction_history]
 
             result = evaluation_prompt(
                 scenario_setting=scenario_setting,
+                scenario=scenario,
                 conversation=interaction,
                 client=client,
                 model_name=model,
                 provider=provider,
             )
             log.info(f"Scores for row {idx}: {result}")
+            row["evaluation_result"] = json.dumps(result, ensure_ascii=False)
             output_record = row.to_dict()
-            output_record["shared_goal_completion_score"] = result["shared_goal_completion_score"]
-            output_record["agent1_goal_completion_score"] = result["Agent A"]["personal_goal_completion_score"]
-            output_record["agent2_goal_completion_score"] = result["Agent B"]["personal_goal_completion_score"]
-            # reasonings for both agents
+            # scores
+            output_record["shared_goal_completion_score"] = result["shared_goal_achievement_score"]
+            output_record["agent1_goal_completion_score"] = result["Agent A"]["personal_goal_achievement_score"]
+            output_record["agent2_goal_completion_score"] = result["Agent B"]["personal_goal_achievement_score"]
+            # reasonings
+            output_record["shared_goal_reasoning"] = result["reasoning"]
             output_record["agent1_reasoning"] = result["Agent A"]["reasoning"]
             output_record["agent2_reasoning"] = result["Agent B"]["reasoning"]
+            # confidences
+            output_record["shared_goal_confidence"] = result["confidence_shared"]
+            output_record["agent1_confidence"] = result["Agent A"]["confidence_shared"]
+            output_record["agent2_confidence"] = result["Agent B"]["confidence_shared"]
             results.append(output_record)
 
             pd.DataFrame(results).to_csv(output_csv, index=False)
@@ -74,7 +87,7 @@ def evaluation(
 
     log.info(f"Successfully processed all {len(data)} rows to {output_csv}")
     
-def evaluate_conversation_app(scenario_setting, conversation, client, model, provider=None):
+def evaluate_conversation_app(scenario_setting, scenario, conversation, client, model, provider=None):
     """
     Evaluate a conversation between two agents based on the scenario setting.
     
@@ -90,6 +103,7 @@ def evaluate_conversation_app(scenario_setting, conversation, client, model, pro
     """
     result = evaluation_prompt(
         scenario_setting=scenario_setting,
+        scenario=scenario,
         conversation=conversation,
         client=client,
         model_name=model,

@@ -5,6 +5,7 @@ import csv
 import os
 import time
 import json
+import ast
 from typing import Any, Dict, List, Optional, Callable
 
 import pandas as pd
@@ -316,8 +317,9 @@ def run_with_schedule(
                     "first_agent_role": scenario_data["agent1_role"],
                     "second_agent_role": scenario_data["agent2_role"],
                 }
+                scenario = ast.literal_eval(scenario_data["scenario"])['scenario_context']
                 interaction = [{"agent": d["agent"], "response": d["response"]} for d in interaction_output]
-                evaluation_output = evaluate_conversation_app(scenario_setting, interaction, client, model, provider)
+                evaluation_output = evaluate_conversation_app(scenario_setting, scenario, interaction, client, model, provider)
             except Exception as e:
                 evaluation_output = {"error": str(e)}
                 status = "evaluation_failed"
@@ -327,8 +329,8 @@ def run_with_schedule(
 
         row_out.update({
             "status": status,
-            "interaction_history":json.dumps(interaction_output),
-            "evaluation_json": json.dumps(evaluation_output, ensure_ascii=False, separators=(",", ":")),
+            "interaction_history": json.dumps(interaction_output),
+            "evaluation_json": json.dumps(evaluation_output, ensure_ascii=False),
         })
 
         # append row

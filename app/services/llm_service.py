@@ -92,12 +92,13 @@ class CharismaService:
         log.error("Failed to generate conversation after 3 attempts")
         return None
     
-    def evaluate_conversation(self, scenario_setting: dict, conversation: list, max_retries: int = 3) -> Optional[dict]:
+    def evaluate_conversation(self, scenario_setting: dict, scenario: str, conversation: list, max_retries: int = 3) -> Optional[dict]:
         """Evaluate conversation with retry logic for rate limits"""
         for attempt in range(max_retries):
             try:
                 return evaluate_conversation_app(
                     scenario_setting=scenario_setting,
+                    scenario=scenario,
                     conversation=conversation,
                     client=self.client,
                     model=self.model_name,

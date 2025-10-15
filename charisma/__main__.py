@@ -5,7 +5,7 @@ import logging
 from charisma.pipeline import run_pipeline
 from charisma.scenario_generation.evaluation.emotion_intensity import process_scenarios_csv
 from charisma.scenario_generation.evaluation.entailment_scores import calculate_entailment_scores
-from charisma.pipeline import evaluation
+from charisma.pipeline import evaluation, run_interaction_pipeline
 
 logging.basicConfig(level=logging.INFO)
 
@@ -17,6 +17,7 @@ if __name__ == "__main__":
     )
     # calculate_entailment_scores("outputs/goals_deepseek__scenario_generation_medium.csv", "outputs/scenario_evaluation/entailment/entailment_scores_medium.csv")
     run_pipeline(client)
+    # run_interaction_pipeline()
     # evaluation(client)
     # process_scenarios_csv(
     #     input_csv_path='outputs/goals_deepseek__scenario_generation_medium.csv',

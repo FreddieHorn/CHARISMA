@@ -136,21 +136,23 @@ def get_json_response(json_text: str):
 
 def get_character_list(character_file):
     try:
-        with open(character_file, "r") as file:
-            character_json = json.load(file)
-            character_names = character_json.keys()
-            character_list = []
+        character_list = []
+        with open(character_file, mode="r", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            
+            # Expect columns: character, subcategory
+            for row in reader:
+                name = row.get("mbti_profile")
+                movie = row.get("subcategory")
+                if name and movie:
+                    character_list.append({"character": name, "movie": movie})
 
-            for name in character_names:
-                movie = character_json[name]["subcategory"]
-                character_list.append({"character": name, "movie": movie})
-
-            return character_list
+        return character_list
     except FileNotFoundError:
         logging.info(f"File '{character_file}' not found.")
         return []
-    except json.JSONDecodeError:
-        logging.info(f"Error decoding JSON in file '{character_file}'.")
+    except csv.Error as e:
+        logging.info(f"Error reading CSV file '{character_file}': {e}")
         return []
     except Exception as e:
         logging.info(f"An error occurred: {e}")
@@ -194,7 +196,7 @@ class RolePlayEngine:
             model_name= model["name"],
             openai_api_base="https://openrouter.ai/api/v1",
             openai_api_key=OPEN_ROUTER_API_KEY,
-            temperature=1.0,
+            temperature=0.5,
             # max_tokens=1000,
             streaming=False,
             verbose=False,

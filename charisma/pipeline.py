@@ -50,6 +50,7 @@ def run_interaction_pipeline():
     interaction_generation(
         charaction_filename=config.pipeline.interaction_generation.characters_filepath,
         scenarios_filename=config.pipeline.interaction_generation.scenarios_filepath,
+        behavioral_coding_filename=config.pipeline.behavioral_coding_csv,
         output_csv=interaction_gen_output_csv_path,
         model=config.pipeline.model,
         provider=config.pipeline.provider if config.pipeline.provider else None,
