@@ -9,17 +9,6 @@ class AlignmentScore:
     label: str
     score: float
 
-# def build_hypotheses(schema: Dict[str, str]) -> Dict[str, str]:
-#     """Create NLI-style hypotheses per slot."""
-#     # Customize templates per slot if needed:
-#     return {
-#         "chosen_social_goal_category": f"The scenario’s social goal is {schema['chosen_social_goal_category']}.",
-#         "first_agent_goal":           f"Agent 1 aims to {schema['first_agent_goal']}.",
-#         "second_agent_goal":          f"Agent 2 aims to {schema['second_agent_goal']}.",
-#         "first_agent_role":           f"Agent 1 plays the role of a {schema['first_agent_role']}.",
-#         "second_agent_role":          f"Agent 2 plays the role of a {schema['second_agent_role']}.",
-#     }
-
 def align_schema_NLI(
     scenario: str,
     schema: Dict[str, str],

@@ -24,7 +24,9 @@ class SessionState:
             'simulation_started': False, # may cause bugs with scenario-regeneration - if so, remove this
             'initial_run_flag' : False,
             'conversation_started': False,
-            'number_of_turns': 20
+            'number_of_turns': 20,
+            'geval_results' : {},
+            'entailment_score' : None
         }
         
         for key, default_value in state_vars.items():
@@ -48,3 +50,5 @@ class SessionState:
         st.session_state.goal_setup_data = None
         st.session_state.number_of_turns = 20
         st.session_state.generate_conversation = False
+        st.session_state.geval_results = {}
+        st.session_state.entailment_score = None

@@ -81,7 +81,7 @@ class AIAgentScenarioPlayer:
             render_workflow_tab(self.llm_service, sidebar_config, self.behavioral_codes_df)
         
         with tab2:
-            render_scenario_tab()
+            render_scenario_tab(sidebar_config)
         
         with tab3:
             render_conversation_tab(sidebar_config)

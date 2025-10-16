@@ -56,7 +56,7 @@ def evaluate_scenarios_from_csv(path_to_csv_file: str, save_path: str = None):
             "second_agent_role": row['agent2_role']
         }
         test_case = LLMTestCase(
-        input=scenario_setting,
+        input=str(scenario_setting),
         actual_output=scenario
      )
         # result = evaluate([test_case], metrics=[scenario_coherence, scenario_fluency])[0]

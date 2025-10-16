@@ -162,6 +162,55 @@ wheels = [
 ]
 
 [[package]]
+name = "charisma"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "dotenv" },
+    { name = "langchain-core" },
+    { name = "langchain-openai" },
+    { name = "matplotlib" },
+    { name = "openai" },
+    { name = "pandas" },
+    { name = "plotly" },
+    { name = "seaborn" },
+    { name = "toml" },
+    { name = "transformers" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "deepeval" },
+    { name = "scikit-learn" },
+    { name = "sentence-transformers" },
+    { name = "streamlit" },
+    { name = "torch" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "dotenv", specifier = ">=0.9.9" },
+    { name = "langchain-core", specifier = ">=0.3.72" },
+    { name = "langchain-openai", specifier = ">=0.3.28" },
+    { name = "matplotlib", specifier = ">=3.10.5,<3.11" },
+    { name = "openai", specifier = ">=1.98.0" },
+    { name = "pandas", specifier = ">=2.3.1" },
+    { name = "plotly", specifier = ">=6.3.1,<6.4" },
+    { name = "seaborn", specifier = ">=0.13.2,<0.14" },
+    { name = "toml", specifier = ">=0.10.2" },
+    { name = "transformers", specifier = ">=4.54.1,<4.55" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "deepeval", specifier = ">=3.3.5,<4.0" },
+    { name = "scikit-learn", specifier = ">=1.7.1" },
+    { name = "sentence-transformers", specifier = ">=5.0.0" },
+    { name = "streamlit", specifier = ">=1.49.1" },
+    { name = "torch", specifier = ">=2.7.1" },
+]
+
+[[package]]
 name = "charset-normalizer"
 version = "3.4.4"
 source = { registry = "https://pypi.org/simple" }
@@ -240,7 +289,7 @@ wheels = [
 
 [[package]]
 name = "deepeval"
-version = "3.6.6"
+version = "3.3.9"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
@@ -248,7 +297,6 @@ dependencies = [
     { name = "click" },
     { name = "google-genai" },
     { name = "grpcio" },
-    { name = "jinja2" },
     { name = "nest-asyncio" },
     { name = "ollama" },
     { name = "openai" },
@@ -257,15 +305,12 @@ dependencies = [
     { name = "opentelemetry-sdk" },
     { name = "portalocker" },
     { name = "posthog" },
-    { name = "pydantic" },
-    { name = "pydantic-settings" },
     { name = "pyfiglet" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-repeat" },
     { name = "pytest-rerunfailures" },
     { name = "pytest-xdist" },
-    { name = "python-dotenv" },
     { name = "requests" },
     { name = "rich" },
     { name = "sentry-sdk" },
@@ -276,9 +321,9 @@ dependencies = [
     { name = "typer" },
     { name = "wheel" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ba/21/888e266a86efaa2796e9cc60589fec424efd776450acf52d98724304b84f/deepeval-3.6.6.tar.gz", hash = "sha256:18bd0c167fc3586512c301ce8c38b8ea1488933e9caaec0db1afaee04b5d7761", size = 433824, upload-time = "2025-10-08T18:34:55.172Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e7/9d/b3bfe0ba81a8e1314fa8dfeb98e2a6bc3168a049061c852f8ca20dc1c485/deepeval-3.3.9.tar.gz", hash = "sha256:b9e2361603102d27b1e599446fa7fcc09d05b8f0c695a53efcbdedfb940d5ab6", size = 373855, upload-time = "2025-08-10T08:35:38.377Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1f/b2/43276ed47c0f15a29106fb44b25b6f72a9b094264741a58f4b4a22daf898/deepeval-3.6.6-py3-none-any.whl", hash = "sha256:9233363f6ec03b41c6c75c31cc931c0835abccbf4bb65fa59b7cc47313661844", size = 627653, upload-time = "2025-10-08T18:34:53.218Z" },
+    { url = "https://files.pythonhosted.org/packages/7e/88/f6a2702916275d52f773b5d79c50cfbba8ef51022e555b72e5592fb4c4be/deepeval-3.3.9-py3-none-any.whl", hash = "sha256:1ff9afc44547092425179bf397c314da20977827b09a4ec8f7daf036767b3ef9", size = 558155, upload-time = "2025-08-10T08:35:36.587Z" },
 ]
 
 [[package]]
@@ -377,55 +422,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/de/e0/bab50af11c2d75c9c4a2a26a5254573c0bd97cea152254401510950486fa/fsspec-2025.9.0.tar.gz", hash = "sha256:19fd429483d25d28b65ec68f9f4adc16c17ea2c7c7bf54ec61360d478fb19c19", size = 304847, upload-time = "2025-09-02T19:10:49.215Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/47/71/70db47e4f6ce3e5c37a607355f80da8860a33226be640226ac52cb05ef2e/fsspec-2025.9.0-py3-none-any.whl", hash = "sha256:530dc2a2af60a414a832059574df4a6e10cce927f6f4a78209390fe38955cfb7", size = 199289, upload-time = "2025-09-02T19:10:47.708Z" },
-]
-
-[[package]]
-name = "charisma"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "dotenv" },
-    { name = "langchain-core" },
-    { name = "langchain-openai" },
-    { name = "matplotlib" },
-    { name = "openai" },
-    { name = "pandas" },
-    { name = "plotly" },
-    { name = "seaborn" },
-    { name = "toml" },
-    { name = "transformers" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "deepeval" },
-    { name = "scikit-learn" },
-    { name = "sentence-transformers" },
-    { name = "streamlit" },
-    { name = "torch" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "dotenv", specifier = ">=0.9.9" },
-    { name = "langchain-core", specifier = ">=0.3.72" },
-    { name = "langchain-openai", specifier = ">=0.3.28" },
-    { name = "matplotlib", specifier = ">=3.10.5,<3.11" },
-    { name = "openai", specifier = ">=1.98.0" },
-    { name = "pandas", specifier = ">=2.3.1" },
-    { name = "plotly", specifier = ">=6.3.1,<6.4" },
-    { name = "seaborn", specifier = ">=0.13.2,<0.14" },
-    { name = "toml", specifier = ">=0.10.2" },
-    { name = "transformers", specifier = ">=4.54.1,<4.55" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "deepeval", specifier = ">=3.3.5" },
-    { name = "scikit-learn", specifier = ">=1.7.1" },
-    { name = "sentence-transformers", specifier = ">=5.0.0" },
-    { name = "streamlit", specifier = ">=1.49.1" },
-    { name = "torch", specifier = ">=2.7.1" },
 ]
 
 [[package]]
@@ -843,6 +839,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/d6/54/cfe61301667036ec958cb99bd3efefba235e65cdeb9c84d24a8293ba1d90/mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba", size = 8729, upload-time = "2022-08-14T12:40:10.846Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8", size = 9979, upload-time = "2022-08-14T12:40:09.779Z" },
+]
+
+[[package]]
+name = "monotonic"
+version = "1.6"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ea/ca/8e91948b782ddfbd194f323e7e7d9ba12e5877addf04fb2bf8fca38e86ac/monotonic-1.6.tar.gz", hash = "sha256:3a55207bcfed53ddd5c5bae174524062935efed17792e9de2ad0205ce9ad63f7", size = 7615, upload-time = "2021-08-11T14:37:28.79Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9a/67/7e8406a29b6c45be7af7740456f7f37025f0506ae2e05fb9009a53946860/monotonic-1.6-py2.py3-none-any.whl", hash = "sha256:68687e19a14f11f26d140dd5c86f3dba4bf5df58003000ed467e0e2a69bca96c", size = 8154, upload-time = "2021-04-09T21:58:05.122Z" },
 ]
 
 [[package]]
@@ -1283,19 +1288,19 @@ wheels = [
 
 [[package]]
 name = "posthog"
-version = "6.7.7"
+version = "3.25.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "backoff" },
     { name = "distro" },
+    { name = "monotonic" },
     { name = "python-dateutil" },
     { name = "requests" },
     { name = "six" },
-    { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/45/aa/2df04524457fe58751e850a58d1e64e092dc5ac69dde6ac532e7405c27a2/posthog-6.7.7.tar.gz", hash = "sha256:ffb7bac388f66e5c9e2e3d6028572386ad3c98bba7a9a4669db05b10ac23357a", size = 119080, upload-time = "2025-10-14T10:34:20.194Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/85/a9/ec3bbc23b6f3c23c52e0b5795b1357cca74aa5cfb254213f1e471fef9b4d/posthog-3.25.0.tar.gz", hash = "sha256:9168f3e7a0a5571b6b1065c41b3c171fbc68bfe72c3ac0bfd6e3d2fcdb7df2ca", size = 75968, upload-time = "2025-04-15T21:15:45.552Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f5/dd/840647190da41d4290ab3ec885df248b5326b37e1cb00a0f0bb82dddc3f1/posthog-6.7.7-py3-none-any.whl", hash = "sha256:bf8187ce8e6da33d5c122ee03a759efa8f181630380260526294454dab0c8bab", size = 137298, upload-time = "2025-10-14T10:34:18.616Z" },
+    { url = "https://files.pythonhosted.org/packages/54/e2/c158366e621562ef224f132e75c1d1c1fce6b078a19f7d8060451a12d4b9/posthog-3.25.0-py2.py3-none-any.whl", hash = "sha256:85db78c13d1ecb11aed06fad53759c4e8fb3633442c2f3d0336bc0ce8a585d30", size = 89115, upload-time = "2025-04-15T21:15:43.934Z" },
 ]
 
 [[package]]
@@ -1414,20 +1419,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/5e/db/6db8073e3d32dae017da7e0d16a9ecb897d0a4d92e00634916e486097961/pydantic_core-2.41.4-graalpy312-graalpy250_312_native-macosx_11_0_arm64.whl", hash = "sha256:4a9ab037b71927babc6d9e7fc01aea9e66dc2a4a34dff06ef0724a4049629f94", size = 1920387, upload-time = "2025-10-14T10:22:59.342Z" },
     { url = "https://files.pythonhosted.org/packages/0d/c1/dd3542d072fcc336030d66834872f0328727e3b8de289c662faa04aa270e/pydantic_core-2.41.4-graalpy312-graalpy250_312_native-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e4dab9484ec605c3016df9ad4fd4f9a390bc5d816a3b10c6550f8424bb80b18c", size = 1951495, upload-time = "2025-10-14T10:23:02.089Z" },
     { url = "https://files.pythonhosted.org/packages/2b/c6/db8d13a1f8ab3f1eb08c88bd00fd62d44311e3456d1e85c0e59e0a0376e7/pydantic_core-2.41.4-graalpy312-graalpy250_312_native-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bd8a5028425820731d8c6c098ab642d7b8b999758e24acae03ed38a66eca8335", size = 2139008, upload-time = "2025-10-14T10:23:04.539Z" },
-]
-
-[[package]]
-name = "pydantic-settings"
-version = "2.11.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "pydantic" },
-    { name = "python-dotenv" },
-    { name = "typing-inspection" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/20/c5/dbbc27b814c71676593d1c3f718e6cd7d4f00652cefa24b75f7aa3efb25e/pydantic_settings-2.11.0.tar.gz", hash = "sha256:d0e87a1c7d33593beb7194adb8470fc426e95ba02af83a0f23474a04c9a08180", size = 188394, upload-time = "2025-09-24T14:19:11.764Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/83/d6/887a1ff844e64aa823fb4905978d882a633cfe295c32eacad582b78a7d8b/pydantic_settings-2.11.0-py3-none-any.whl", hash = "sha256:fe2cea3413b9530d10f3a5875adffb17ada5c1e1bab0b2885546d7310415207c", size = 48608, upload-time = "2025-09-24T14:19:10.015Z" },
 ]
 
 [[package]]
