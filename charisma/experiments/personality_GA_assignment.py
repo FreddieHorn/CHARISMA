@@ -289,13 +289,18 @@ def sample_pairs_for_slots(
         cand = cand[cand["load"] == min_load]
         chosen = cand.sample(n=1, random_state=rng.integers(0, 2**32 - 1)).iloc[0]
         a, b = chosen["agent_a_id"], chosen["agent_b_id"]
+        a_name, b_name = chosen["agent_a_name"], chosen["agent_b_name"]
+        # if rng.random() < 0.5:
+        #     a, b = b, a
+        #     a_name, b_name = b_name, a_name
+        
         assignments.append(
             {
                 "slot_id": slot["slot_id"],
                 "agent_a_id": a,
                 "agent_b_id": b,
-                "agent_a_name": chosen["agent_a_name"],
-                "agent_b_name": chosen["agent_b_name"],
+                "agent_a_name": a_name,
+                "agent_b_name": b_name,
                 "pair_L1": chosen["pair_L1"],
                 "pair_L1_bin": chosen["pair_L1_bin"],
             }

@@ -18,7 +18,7 @@ def render_evaluation_tab(config: dict, behavioral_codes_df: pd.DataFrame):
     with eval_col1:
         st.metric(
             label="Shared Goal Completion Score",
-            value=f"{st.session_state.evaluation_data['shared_goal_completion_score']}/10"
+            value=f"{st.session_state.evaluation_data['shared_goal_achievement_score']}/10"
         )
         
         st.metric(

@@ -249,6 +249,7 @@ def _trigger_evaluation(llm_service: CharismaService, config: dict, behavioral_c
         }
         st.session_state.evaluation_data = llm_service.evaluate_conversation(
             scenario_setting=scenario_setting_payload,
+            scenario=st.session_state.scenario_content,
             conversation=st.session_state.conversation_rows
         )
         
@@ -283,7 +284,7 @@ def _render_basic_evaluation_metrics(config: dict):
     with eval_col1:
         st.metric(
             label="Shared Goal Completion Score",
-            value=f"{st.session_state.evaluation_data['shared_goal_completion_score']}/10"
+            value=f"{st.session_state.evaluation_data['shared_goal_achievement_score']}/10"
         )
         
         st.metric(

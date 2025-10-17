@@ -14,7 +14,7 @@ difficulty = "Hard" # TODO: Difficulty levels should be defined as a list
 agentic_generation = false
 [pipeline.interaction_generation]
 scenarios_filepath = "inputs/goals_deepseek__scenario_generation_Easy.csv"
-characters_filepath = "inputs/characters.json"
+characters_filepath = "inputs/characters.csv"
 [pipeline.evaluation]
 input_csv = "outputs/goals_deepseek__scenario_generation_medium__interaction_generation.csv"
 [pipeline.experiments.robustness_1]
