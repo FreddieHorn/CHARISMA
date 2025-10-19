@@ -57,5 +57,43 @@ CUSTOM_CSS = """
         color: white !important;
         border-bottom: 3px solid #ff9800;
     }
+        .stSlider [data-baseweb="slider"] {
+        margin: 10px 0;
+    }
+    
+    /* Character card styles */
+    .character-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 5px 0;
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease;
+    }
+    
+    .character-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .personality-badge {
+        display: inline-block;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 10px;
+        margin: 1px;
+    }
+    
+    /* Range display styles */
+    .range-display {
+        background-color: #e3f2fd;
+        padding: 5px 10px;
+        border-radius: 5px;
+        margin: 5px 0;
+        font-size: 12px;
+    }
 </style>
 """

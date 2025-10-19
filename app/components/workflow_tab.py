@@ -9,6 +9,9 @@ from app.util import goal_achievment_int_to_str
 from app.components.real_time_chat import render_real_time_chat
 import plotly.express as px
 import pandas as pd
+from logging import getLogger
+
+log = getLogger(__name__)
 
 def render_workflow_tab(llm_service: CharismaService, sidebar_config: dict, behavioral_codes_df: pd.DataFrame):
     """Render the main simulation workflow tab"""
@@ -216,6 +219,7 @@ def _render_conversation_section(llm_service: CharismaService, config: dict, beh
             st.rerun()
     with code_col:
         st.markdown("<br>", unsafe_allow_html=True)  # Spacer
+        st.markdown("<br>", unsafe_allow_html=True)  # Placeholder for alignment
         st.markdown("### 🏷️ Behavioral Codes")
 
     if st.session_state.conversation_started:
@@ -289,14 +293,14 @@ def _render_basic_evaluation_metrics(config: dict):
         
         st.metric(
             label=f"{config['agent1_name']} Score",
-            value=f"{st.session_state.evaluation_data['Agent A']['personal_goal_completion_score']}/10",
-            delta="Goal Achievement: " + goal_achievment_int_to_str(int(st.session_state.evaluation_data['Agent A']['personal_goal_completion_score']))
+            value=f"{st.session_state.evaluation_data['Agent A']['personal_goal_achievement_score']}/10",
+            delta="Goal Achievement: " + goal_achievment_int_to_str(int(st.session_state.evaluation_data['Agent A']['personal_goal_achievement_score']))
         )
         
         st.metric(
             label=f"{config['agent2_name']} Score",
-            value=f"{st.session_state.evaluation_data['Agent B']['personal_goal_completion_score']}/10",
-            delta="Goal Achievement: " + goal_achievment_int_to_str(int(st.session_state.evaluation_data['Agent B']['personal_goal_completion_score']))
+            value=f"{st.session_state.evaluation_data['Agent B']['personal_goal_achievement_score']}/10",
+            delta="Goal Achievement: " + goal_achievment_int_to_str(int(st.session_state.evaluation_data['Agent B']['personal_goal_achievement_score']))
         )
                 
     with eval_col2:
@@ -540,6 +544,9 @@ def _render_sentiment_analysis_eval(config: dict):
     
     # Display detailed sentiment breakdown
     _render_sentiment_breakdown(sentiment_results, config)
+    
+    # Display Semantic Arc
+    _render_compact_semantic_arc(sentiment_results, config)
 
 def _render_sentiment_summary(sentiment_results: Dict, config: dict):
     """Render sentiment summary"""
@@ -656,3 +663,37 @@ def _render_download_buttons():
             mime="text/csv",
             key="dl_evaluation_main"
         )
+        
+def _render_compact_semantic_arc(sentiment_results, config: dict, key: str = "compact_semantic_arc_chart"):
+    """Compact version of semantic arc for limited space"""
+    if not st.session_state.conversation_rows:
+        return
+    
+    if not sentiment_results:
+        return
+    log.info(f"semantic arc sentiment results: {sentiment_results}")
+    df = pd.DataFrame(sentiment_results['detailed_results'])
+    
+    # Simple line chart
+    fig = px.line(
+        df, 
+        x='turn', 
+        y='sentiment_score', 
+        color='speaker',
+        title="Sentiment Progression",
+        labels={'turn': 'Turn', 'sentiment_score': 'Sentiment'}
+    )
+    
+    fig.update_layout(height=300, showlegend=True)
+    st.plotly_chart(fig, use_container_width=True, key=key)
+    
+    # Quick stats
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric(f"Avg Sentiment - {sentiment_results['conversation_summary']['average_sentiment_label']}", f"{df['sentiment_score'].mean():.2f}")
+    with col2:
+        # add explanation of volatility
+        st.metric("Volatility", f"{df['sentiment_score'].std():.2f}", help="Standard deviation of sentiment scores")
+    with col3:
+        dominant_mood = df['sentiment_label'].mode()
+        st.metric("Dominant Mood (most frequent)", dominant_mood[0] if not dominant_mood.empty else "N/A")

@@ -3,6 +3,7 @@ import time
 from app.services.conversation_service import ConversationService
 from app.services.llm_service import CharismaService
 from logging import getLogger
+import time
 log = getLogger(__name__)
 
 def render_real_time_chat(llm_service: CharismaService, config: dict, typing_speed: float = 0.01, thinking_delay: float = 1.0):
@@ -30,36 +31,6 @@ def render_real_time_chat(llm_service: CharismaService, config: dict, typing_spe
     if not st.session_state.conversation_finished and st.session_state.generate_conversation:
         _generate_conversation_stream(conversation_service, llm_service, config, typing_speed=typing_speed, thinking_delay=thinking_delay)
 
-def _display_existing_messages():
-    """Display existing chat messages"""
-    for message in st.session_state.chat_messages:
-        with st.chat_message(message["role"], avatar=message.get("avatar", "🤖")):
-            st.markdown(message["content"])
-
-def _display_existing_behavioral_codes(config: dict):
-    """Display existing behavioral codes"""
-    for i, code_data in enumerate(st.session_state.behavioral_codes):
-        speaker = code_data["speaker"]
-        behavioral_code = code_data["behavioral_code"]
-        
-        # Determine styling based on agent
-        if speaker == config['agent1_name']:
-            badge_color = "primary"
-            icon = "🤖"
-        else:
-            badge_color = "secondary" 
-            icon = "👨‍💼"
-
-        with st.container():
-            col1, col2 = st.columns([2, 1])
-            with col1:
-                st.markdown(f"**{icon} {speaker}**")
-            with col2:
-                log.info(f"registering behavioral code: {behavioral_code} for {speaker}")
-                if badge_color == "primary":
-                    st.markdown(f"**{behavioral_code}**")
-                else:
-                    st.markdown(f"**:yellow[{behavioral_code}]**")
 
 def _display_existing_messages_with_codes(config: dict):
     """Display existing chat messages with their behavioral codes in synchronized rows"""
@@ -144,7 +115,12 @@ def _generate_conversation_stream(conversation_service: ConversationService, llm
         
         # Create NEW columns for this specific message
         message_chat_col, message_code_col = st.columns([2, 1], vertical_alignment="center")
-        
+                # Display behavioral code in the code column (same row)
+        with message_code_col:
+            # Use your existing compact display function
+            _display_single_behavioral_code_compact(speaker, behavioral_code, config)
+            time.sleep(0.5) # Small delay to ensure code appears before message
+            
         # Display message in the chat column
         with message_chat_col:
             with st.chat_message(role, avatar=avatar):
@@ -161,10 +137,6 @@ def _generate_conversation_stream(conversation_service: ConversationService, llm
                 # Remove cursor and show final text
                 message_placeholder.write(displayed_text)
         
-        # Display behavioral code in the code column (same row)
-        with message_code_col:
-            # Use your existing compact display function
-            _display_single_behavioral_code_compact(speaker, behavioral_code, config)
         
         # Store message
         st.session_state.chat_messages.append({

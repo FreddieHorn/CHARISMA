@@ -87,7 +87,7 @@ class SentimentAnalysisService:
         return {
             'detailed_results': sentiment_results,
             'speaker_sentiments': speaker_sentiments,
-            'conversation_summary': conversation_summary
+            'conversation_summary': conversation_summary,
         }
     
     def _calculate_sentiment_summary(self, sentiment_results: List[Dict], speaker_sentiments: Dict) -> Dict:

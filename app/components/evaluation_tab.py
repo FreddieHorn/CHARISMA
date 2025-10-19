@@ -2,6 +2,7 @@ import streamlit as st
 from app.util import goal_achievment_int_to_str
 from app.services.behavioral_analisis_service import BehavioralAnalysisService
 from app.services.sentiment_service import SentimentAnalysisService
+from app.components.workflow_tab import _render_compact_semantic_arc
 from typing import Dict, List
 import pandas as pd
 
@@ -23,14 +24,14 @@ def render_evaluation_tab(config: dict, behavioral_codes_df: pd.DataFrame):
         
         st.metric(
             label=f"{config['agent1_name']} Score",
-            value=f"{st.session_state.evaluation_data['Agent A']['personal_goal_completion_score']}/10",
-            delta="Goal Achievement: " + goal_achievment_int_to_str(int(st.session_state.evaluation_data['Agent A']['personal_goal_completion_score']))
+            value=f"{st.session_state.evaluation_data['Agent A']['personal_goal_achievement_score']}/10",
+            delta="Goal Achievement: " + goal_achievment_int_to_str(int(st.session_state.evaluation_data['Agent A']['personal_goal_achievement_score']))
         )
         
         st.metric(
             label=f"{config['agent2_name']} Score",
-            value=f"{st.session_state.evaluation_data['Agent B']['personal_goal_completion_score']}/10",
-            delta="Goal Achievement: " + goal_achievment_int_to_str(int(st.session_state.evaluation_data['Agent B']['personal_goal_completion_score']))
+            value=f"{st.session_state.evaluation_data['Agent B']['personal_goal_achievement_score']}/10",
+            delta="Goal Achievement: " + goal_achievment_int_to_str(int(st.session_state.evaluation_data['Agent B']['personal_goal_achievement_score']))
         )
                 
     with eval_col2:
@@ -269,6 +270,9 @@ def _render_sentiment_analysis_eval(config: dict):
     
     # Display detailed sentiment breakdown
     _render_sentiment_breakdown(sentiment_results, config)
+    
+    # Display Semantic Arc
+    _render_compact_semantic_arc(sentiment_results, config, key="eval_sentiment_compact_arc_eval")
 
 def _render_sentiment_summary(sentiment_results: Dict, config: dict):
     """Render sentiment summary"""

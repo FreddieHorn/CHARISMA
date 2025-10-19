@@ -41,7 +41,7 @@ def render_scenario_tab(config: dict):
         _render_entailment_analysis(config=config)
 
         # Cohesiveness and Fluency (placeholder for G-Eval)
-        _render_geval_analysis(config=config)
+        _render_geval_analysis(config=config, model_name=config['model_name'], provider=config['provider'])
 
 def _render_emotion_analysis():
     """Render emotion intensity analysis"""
@@ -201,41 +201,7 @@ def _render_entailment_explanation():
         text *entails* (logically follows from) each element of your scenario setup.
         """)
 
-def _render_text_quality_metrics():
-    """Render text quality metrics (placeholder for G-Eval)"""
-    st.markdown("#### 📝 Text Quality Metrics")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.metric(
-            label="Cohesiveness Score",
-            value="0.85",  # Placeholder
-            delta="Good"
-        )
-        with st.expander("About Cohesiveness"):
-            st.markdown("""
-            **Cohesiveness** measures how well the scenario flows and connects logically:
-            - **0.8-1.0**: Excellent flow and logical connections
-            - **0.6-0.8**: Good overall coherence  
-            - **0.0-0.6**: May have disjointed elements
-            """)
-    
-    with col2:
-        st.metric(
-            label="Fluency Score", 
-            value="0.78",  # Placeholder
-            delta="Good"
-        )
-        with st.expander("About Fluency"):
-            st.markdown("""
-            **Fluency** measures the naturalness and grammatical quality:
-            - **0.8-1.0**: Very natural and well-written
-            - **0.6-0.8**: Generally fluent with minor issues
-            - **0.0-0.6**: May have significant language issues
-            """)
-
-def _render_geval_analysis(config: dict):
+def _render_geval_analysis(config: dict, model_name: str, provider: str):
     """Render G-Eval text quality analysis"""
     st.markdown("#### 📝 Text Quality Analysis (G-Eval)")
     
@@ -247,7 +213,7 @@ def _render_geval_analysis(config: dict):
             api_key=OPEN_ROUTER_API_KEY
         )
     # Initialize G-Eval service
-    geval_service = G_EvalService(client=client)
+    geval_service = G_EvalService(client=client, model_name=model_name, provider=provider)
     
     # Prepare scenario setting for evaluation
     scenario_setting = {

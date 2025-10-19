@@ -10,14 +10,15 @@ from app.components.workflow_tab import render_workflow_tab
 from app.components.scenario_tab import render_scenario_tab
 from app.components.conversation_tab import render_conversation_tab
 from app.components.evaluation_tab import render_evaluation_tab
-
+from logging import getLogger
+log = getLogger(__name__)
 class AIAgentScenarioPlayer:
     """Main application class for CHARISMA"""
     
     def __init__(self):
         self.setup_page()
-        self.llm_service = CharismaService()
         SessionState.initialize()
+        self.llm_service = None
         self.behavioral_codes_df = self.load_behavioral_codes()
     
     def setup_page(self):
@@ -47,6 +48,7 @@ class AIAgentScenarioPlayer:
     def run_simulation(self, config: dict):
         """Run the main simulation pipeline"""
         with st.spinner("Running simulation... This may take a few moments."):
+            log.info("Starting simulation with configuration: " + str(config))
             # Setup goals
             goal_setup_data = self.llm_service.setup_goals(
                 shared_goal=config['shared_goal'],
@@ -72,7 +74,7 @@ class AIAgentScenarioPlayer:
         """Render application tabs"""
         tab1, tab2, tab3, tab4 = st.tabs([
             "🚀 Simulation Workflow", 
-            "📋 Scenario", 
+            "📋 Scenario Analysis 📈", 
             "💬 Conversation", 
             "📊 Evaluation"
         ])
@@ -97,6 +99,7 @@ class AIAgentScenarioPlayer:
     def run(self):
         """Main application entry point"""
         sidebar_config = render_sidebar()
+        self.llm_service = CharismaService(model_name=sidebar_config['model_name'], provider=sidebar_config['provider'])
         self.handle_simulation_start(sidebar_config)
         self.render_tabs(sidebar_config)
         self.render_footer()
