@@ -1,5 +1,5 @@
 # CHARISMA
-Character-Based Interaction Simulation with Multi LLM-based Agents for Computational Social Psychology
+Character-Based Interaction Simulation with Multi LLM-based Agents Toward Computational Social Psychology
 ## prerequirements
 We use `uv` as a package manager in the project. Click [here](https://docs.astral.sh/uv/getting-started/installation/) to install it 
 ## app
