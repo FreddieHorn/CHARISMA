@@ -259,20 +259,26 @@ def _render_sentiment_analysis_eval(config: dict):
     if not st.session_state.conversation_rows:
         st.info("No conversation data available for sentiment analysis.")
         return
+    
+    sentiment_service = SentimentAnalysisService()
+    
     if not st.session_state.sentiment_results:
-        st.info("Sentiment analysis results not found.")
+        sentiment_results = sentiment_service.analyze_conversation_sentiment(st.session_state.conversation_rows)
+        st.session_state.sentiment_results = sentiment_results
+
+    if not st.session_state.sentiment_results:
+        st.error("Failed to analyze sentiment.")
         return
-    
-    sentiment_results = st.session_state.sentiment_results
-    
+
+
     # Display sentiment summary
-    _render_sentiment_summary(sentiment_results, config)
+    _render_sentiment_summary(st.session_state.sentiment_results, config)
     
     # Display detailed sentiment breakdown
-    _render_sentiment_breakdown(sentiment_results, config)
-    
+    _render_sentiment_breakdown(st.session_state.sentiment_results, config)
+
     # Display Semantic Arc
-    _render_compact_semantic_arc(sentiment_results, config, key="eval_sentiment_compact_arc_eval")
+    _render_compact_semantic_arc(st.session_state.sentiment_results, config, key="eval_sentiment_compact_arc_eval")
 
 def _render_sentiment_summary(sentiment_results: Dict, config: dict):
     """Render sentiment summary"""

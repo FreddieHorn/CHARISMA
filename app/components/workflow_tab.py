@@ -21,12 +21,14 @@ def render_workflow_tab(llm_service: CharismaService, sidebar_config: dict, beha
         return
     
     _render_scenario_section(llm_service, sidebar_config)
-    
+    if st.session_state.scenario_accepted and not st.session_state.conversation_started:
+        st.info("Proceed to the Scenario Analysis tab to see more details about the generated scenario!", icon="💡")
     if st.session_state.scenario_accepted and st.session_state.generate_conversation:
         _render_conversation_section(llm_service, sidebar_config, behavioral_codes_df)
-    
-    if st.session_state.evaluation_data:
-        _render_evaluation_section(sidebar_config, behavioral_codes_df)
+    if st.session_state.conversation_finished:
+        st.info("Take a look at the Conversation & Agent Analysis tabs for detailed insights!", icon="💡")
+    # if st.session_state.evaluation_data:
+    #     _render_evaluation_section(sidebar_config, behavioral_codes_df)
 
 def _render_welcome_screen():
     """Render welcome screen when no simulation has run"""
@@ -264,22 +266,22 @@ def _trigger_evaluation(llm_service: CharismaService, config: dict, behavioral_c
             st.session_state.evaluation_data['behavioral_analysis'] = behavioral_analysis
 
 
-def _render_evaluation_section(config: dict, behavioral_codes_df: pd.DataFrame):
-    """Render evaluation section with behavioral analysis"""
-    st.markdown('<h3 class="section-header">📊 Evaluation Results</h3>', unsafe_allow_html=True)
+# def _render_evaluation_section(config: dict, behavioral_codes_df: pd.DataFrame):
+#     """Render evaluation section with behavioral analysis"""
+#     st.markdown('<h3 class="section-header">📊 Evaluation Results</h3>', unsafe_allow_html=True)
     
-    # Basic evaluation metrics
-    _render_basic_evaluation_metrics(config)
+#     # Basic evaluation metrics
+#     _render_basic_evaluation_metrics(config)
     
-    # Behavioral analysis (if available)
-    if (st.session_state.behavioral_codes and 
-        not behavioral_codes_df.empty and 
-        'behavioral_analysis' in st.session_state.evaluation_data):
-        _render_behavioral_analysis_workflow(config, behavioral_codes_df)
+#     # Behavioral analysis (if available)
+#     if (st.session_state.behavioral_codes and 
+#         not behavioral_codes_df.empty and 
+#         'behavioral_analysis' in st.session_state.evaluation_data):
+#         _render_behavioral_analysis_workflow(config, behavioral_codes_df)
     
-    # Sentiment analysis section
-    _render_sentiment_analysis_eval(config)
-    _render_download_buttons()
+#     # Sentiment analysis section
+#     _render_sentiment_analysis_eval(config)
+#     _render_download_buttons()
 
 def _render_basic_evaluation_metrics(config: dict):
     """Render basic evaluation metrics"""

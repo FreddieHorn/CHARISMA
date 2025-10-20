@@ -131,108 +131,153 @@ def render_sidebar():
         }
 
 def _render_personality_based_selection(sidebar_disabled: bool):
-    """Render personality-based character selection interface"""
+    """Render personality-based character selection with separate ranges for each agent"""
     # Initialize personality service
     personality_service = PersonalityService()
     
-    # Personality trait sliders with dual handles
-    with st.expander("🎛️ Adjust Personality Ranges", expanded=True):
-        st.markdown("**Adjust min/max values for each personality trait:**")
+    # Agent 1 Personality Configuration
+    st.markdown("### 🤖 Agent 1 Personality")
+    with st.expander("🎛️ Adjust Agent 1 Personality Ranges", expanded=True):
+        agent1_ranges = _render_personality_sliders("agent1", sidebar_disabled)
+    
+    # Agent 2 Personality Configuration  
+    st.markdown("### 👨‍💼 Agent 2 Personality")
+    with st.expander("🎛️ Adjust Agent 2 Personality Ranges", expanded=True):
+        agent2_ranges = _render_personality_sliders("agent2", sidebar_disabled)
+    
+    # Filter characters for each agent
+    agent1_characters = personality_service.filter_characters_by_personality(*agent1_ranges)
+    agent2_characters = personality_service.filter_characters_by_personality(*agent2_ranges)
+    
+    # Display character selection for each agent
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown(f"**Agent 1 Options** ({len(agent1_characters)})")
+        if agent1_characters:
+            agent1_names = [char.name for char in agent1_characters]
+            agent1_name = st.selectbox(
+                "Select Agent 1",
+                options=agent1_names,
+                key="agent1_personality",
+                disabled=sidebar_disabled
+            )
+        else:
+            st.warning("No characters match Agent 1 personality")
+            agent1_name = "Character 1"
+    
+    with col2:
+        st.markdown(f"**Agent 2 Options** ({len(agent2_characters)})")
+        if agent2_characters:
+            agent2_names = [char.name for char in agent2_characters]
+            agent2_name = st.selectbox(
+                "Select Agent 2", 
+                options=agent2_names,
+                index=min(1, len(agent2_names)-1),
+                key="agent2_personality",
+                disabled=sidebar_disabled
+            )
+        else:
+            st.warning("No characters match Agent 2 personality")
+            agent2_name = "Character 2"
+    
+    # Show personality comparison
+    if not sidebar_disabled and agent1_characters and agent2_characters:
+        _render_personality_comparison(agent1_characters, agent2_characters, agent1_name, agent2_name, personality_service)
+    
+    return agent1_name, agent2_name
+
+def _render_personality_sliders(agent_prefix: str, sidebar_disabled: bool):
+    """Render personality sliders for a specific agent"""
+    st.markdown(f"**{agent_prefix.upper()} Personality Traits:**")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        openness_range = st.slider(
+            "**Openness**",
+            min_value=0.0,
+            max_value=1.0,
+            value=(0.3, 0.8),
+            step=0.1,
+            help="Imagination, creativity, curiosity",
+            disabled=sidebar_disabled,
+            key=f"{agent_prefix}_openness_range"
+        )
+        
+        conscientiousness_range = st.slider(
+            "**Conscientiousness**",
+            min_value=0.0,
+            max_value=1.0,
+            value=(0.4, 0.9),
+            step=0.1,
+            help="Organization, diligence, reliability",
+            disabled=sidebar_disabled,
+            key=f"{agent_prefix}_conscientiousness_range"
+        )
+        
+        extraversion_range = st.slider(
+            "**Extraversion**",
+            min_value=0.0,
+            max_value=1.0,
+            value=(0.2, 0.7),
+            step=0.1,
+            help="Sociability, assertiveness, energy",
+            disabled=sidebar_disabled,
+            key=f"{agent_prefix}_extraversion_range"
+        )
+    
+    with col2:
+        agreeableness_range = st.slider(
+            "**Agreeableness**",
+            min_value=0.0,
+            max_value=1.0,
+            value=(0.3, 0.8),
+            step=0.1,
+            help="Cooperation, compassion, trust",
+            disabled=sidebar_disabled,
+            key=f"{agent_prefix}_agreeableness_range"
+        )
+        
+        neuroticism_range = st.slider(
+            "**Neuroticism**",
+            min_value=0.0,
+            max_value=1.0,
+            value=(0.2, 0.6),
+            step=0.1,
+            help="Emotional stability, anxiety, sensitivity",
+            disabled=sidebar_disabled,
+            key=f"{agent_prefix}_neuroticism_range"
+        )
+    
+    return openness_range, conscientiousness_range, extraversion_range, agreeableness_range, neuroticism_range
+
+def _render_personality_comparison(agent1_chars: list, agent2_chars: list, agent1_name: str, agent2_name: str, personality_service: PersonalityService):
+    """Render a quick comparison of the selected agents' personalities"""
+    agent1_char = next((char for char in agent1_chars if char.name == agent1_name), None)
+    agent2_char = next((char for char in agent2_chars if char.name == agent2_name), None)
+    
+    if agent1_char and agent2_char:
+        st.markdown("##### 🆚 Personality Comparison")
         
         col1, col2 = st.columns(2)
         
         with col1:
-            openness_range = st.slider(
-                "**Openness**",
-                min_value=0.0,
-                max_value=1.0,
-                value=(0.0, 1.0),
-                step=0.1,
-                help="Imagination, creativity, curiosity",
-                disabled=sidebar_disabled,
-                key="openness_range"
-            )
-            
-            conscientiousness_range = st.slider(
-                "**Conscientiousness**",
-                min_value=0.0,
-                max_value=1.0,
-                value=(0.0, 1.0),
-                step=0.1,
-                help="Organization, diligence, reliability",
-                disabled=sidebar_disabled,
-                key="conscientiousness_range"
-            )
-            
-            extraversion_range = st.slider(
-                "**Extraversion**",
-                min_value=0.0,
-                max_value=1.0,
-                value=(0.0, 1.0),
-                step=0.1,
-                help="Sociability, assertiveness, energy",
-                disabled=sidebar_disabled,
-                key="extraversion_range"
-            )
+            st.markdown(f"**{agent1_name}**")
+            st.write(f"• Openness: {agent1_char.openness:.1f}")
+            st.write(f"• Conscientiousness: {agent1_char.conscientiousness:.1f}")
+            st.write(f"• Extraversion: {agent1_char.extraversion:.1f}")
+            st.write(f"• Agreeableness: {agent1_char.agreeableness:.1f}")
+            st.write(f"• Neuroticism: {agent1_char.neuroticism:.1f}")
         
         with col2:
-            agreeableness_range = st.slider(
-                "**Agreeableness**",
-                min_value=0.0,
-                max_value=1.0,
-                value=(0.0, 1.0),
-                step=0.1,
-                help="Cooperation, compassion, trust",
-                disabled=sidebar_disabled,
-                key="agreeableness_range"
-            )
+            st.markdown(f"**{agent2_name}**")
+            st.write(f"• Openness: {agent2_char.openness:.1f}")
+            st.write(f"• Conscientiousness: {agent2_char.conscientiousness:.1f}")
+            st.write(f"• Extraversion: {agent2_char.extraversion:.1f}")
+            st.write(f"• Agreeableness: {agent2_char.agreeableness:.1f}")
+            st.write(f"• Neuroticism: {agent2_char.neuroticism:.1f}")
             
-            neuroticism_range = st.slider(
-                "**Neuroticism**",
-                min_value=0.0,
-                max_value=1.0,
-                value=(0.0, 1.0),
-                step=0.1,
-                help="Emotional stability, anxiety, sensitivity",
-                disabled=sidebar_disabled,
-                key="neuroticism_range"
-            )
-    
-    # Filter characters based on personality ranges
-    filtered_characters = personality_service.filter_characters_by_personality(
-        openness_range, conscientiousness_range, extraversion_range, 
-        agreeableness_range, neuroticism_range
-    )
-    
-    # Display matching characters
-    st.markdown(f"### 🎭 Matching Characters ({len(filtered_characters)})")
-    
-    if not filtered_characters:
-        st.warning("No characters match your selected personality ranges. Try broadening your criteria.")
-        return "Character 1", "Character 2"
-    
-    # Display character selection
-    character_names = [char.name for char in filtered_characters]
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        agent1_name = st.selectbox(
-            "Select Agent 1",
-            options=character_names,
-            key="agent1_personality",
-            disabled=sidebar_disabled
-        )
-    with col2:
-        agent2_name = st.selectbox(
-            "Select Agent 2", 
-            options=character_names,
-            index=min(1, len(character_names)-1),
-            key="agent2_personality",
-            disabled=sidebar_disabled
-        )
-    
-    return agent1_name, agent2_name
-
 def _render_custom_name_selection(sidebar_disabled: bool):
     """Render traditional custom name selection"""
     col1, col2 = st.columns(2)

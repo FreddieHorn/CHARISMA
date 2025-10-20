@@ -74,9 +74,9 @@ class AIAgentScenarioPlayer:
         """Render application tabs"""
         tab1, tab2, tab3, tab4 = st.tabs([
             "🚀 Simulation Workflow", 
-            "📋 Scenario Analysis 📈", 
-            "💬 Conversation", 
-            "📊 Evaluation"
+            "📋 Scenario Analysis", 
+            "💬 Conversation Analysis", 
+            "📊 Agent Analysis"
         ])
         
         with tab1:

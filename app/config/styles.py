@@ -1,5 +1,8 @@
 CUSTOM_CSS = """
 <style>
+    section[data-testid="stSidebar"] {
+        min-width: 400px; max-width: 800px; width: 650px;
+    }
     .main-header {
         font-size: 2.5rem;
         color: #1f77b4;
