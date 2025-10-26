@@ -6,6 +6,10 @@ from openai import OpenAI
 from app.config.settings import OPEN_ROUTER_API_KEY
 import logging
 log = logging.getLogger(__name__)
+
+# Initialize entailment service
+entailment_service = EntailmentService()
+
 def render_scenario_tab(config: dict):
     """Render the scenario details tab"""
     if st.session_state.scenario_data is None:
@@ -134,9 +138,6 @@ def _render_entailment_analysis(config: dict):
     if not st.session_state.scenario_content or not st.session_state.goal_setup_data:
         st.info("Scenario content or setup data not available for entailment analysis.")
         return
-    
-    # Initialize entailment service
-    entailment_service = EntailmentService()
     
     # Prepare schema from goal setup data
     schema = {

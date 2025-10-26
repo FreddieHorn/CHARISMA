@@ -10,45 +10,45 @@ def render_conversation_tab(config: dict):
         st.info("Accept the scenario first to view the conversation.")
         return
     
-    message_chat_col, message_code_col, message_emotion_col = st.columns([2, 1, 1], vertical_alignment="center")
-    with message_chat_col:
-        st.markdown(f'<h2 class="section-header">Conversation between {config["agent1_name"]} and {config["agent2_name"]}</h2>', unsafe_allow_html=True)
-    with message_code_col:
-        st.markdown(f'<h2 class="section-header">Behavioral Codes</h2>', unsafe_allow_html=True)
-    with message_emotion_col:
-        st.markdown(f'<h2 class="section-header">Top emotions by message</h2>', unsafe_allow_html=True)
-    # Automatically analyze emotions if not already done
-    if not hasattr(st.session_state, 'emotion_results') or not st.session_state.emotion_results:
-        _perform_emotion_analysis(config)
-    
-    # Display conversation with behavioral codes and emotions
-    _display_conversation_with_codes_and_emotions(config)
-    
-    # Show emotion summary by default
-    _render_emotion_summary_chart(config)
+    if st.session_state.conversation_finished:
+        message_chat_col, message_code_col, message_emotion_col = st.columns([2, 1, 1], vertical_alignment="center")
+        with message_chat_col:
+            st.markdown(f'<h2 class="section-header">Conversation between {config["agent1_name"]} and {config["agent2_name"]}</h2>', unsafe_allow_html=True)
+        with message_code_col:
+            st.markdown(f'<h2 class="section-header">Behavioral Codes</h2>', unsafe_allow_html=True)
+        with message_emotion_col:
+            st.markdown(f'<h2 class="section-header">Top emotions by message</h2>', unsafe_allow_html=True)
+        # Automatically analyze emotions if not already done
+        if not hasattr(st.session_state, 'emotion_results') or not st.session_state.emotion_results:
+            _perform_emotion_analysis(config)
+        
+        # Display conversation with behavioral codes and emotions
+        _display_conversation_with_codes_and_emotions(config)
+        
+        # Show emotion summary by default
+        _render_emotion_summary_chart(config)
 
 def _perform_emotion_analysis(config: dict):
     """Perform emotion analysis for the conversation"""
     emotion_service = EmotionIntensityService()
     
-    with st.spinner("Analyzing emotional content..."):
-        emotion_results = []
+    emotion_results = []
+    
+    for i, message in enumerate(st.session_state.chat_messages):
+        analysis = emotion_service.analyze_scenario_emotions(message['content'])
+        top_emotions = _get_top_emotions(analysis, 3)
         
-        for i, message in enumerate(st.session_state.chat_messages):
-            analysis = emotion_service.analyze_scenario_emotions(message['content'])
-            top_emotions = _get_top_emotions(analysis, 3)
-            
-            emotion_data = {
-                'turn': i + 1,
-                'speaker': message['speaker'],
-                'message': message['content'],
-                'top_emotions': top_emotions,
-                'analysis': analysis
-            }
-            emotion_results.append(emotion_data)
-        
-        # Store results in session state
-        st.session_state.emotion_results = emotion_results
+        emotion_data = {
+            'turn': i + 1,
+            'speaker': message['speaker'],
+            'message': message['content'],
+            'top_emotions': top_emotions,
+            'analysis': analysis
+        }
+        emotion_results.append(emotion_data)
+    
+    # Store results in session state
+    st.session_state.emotion_results = emotion_results
 
 def _get_top_emotions(analysis: Dict, top_n: int = 3) -> List[Tuple[str, float]]:
     """Get top N emotions by intensity from analysis"""

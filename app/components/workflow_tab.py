@@ -27,6 +27,7 @@ def render_workflow_tab(llm_service: CharismaService, sidebar_config: dict, beha
         _render_conversation_section(llm_service, sidebar_config, behavioral_codes_df)
     if st.session_state.conversation_finished:
         st.info("Take a look at the Conversation & Agent Analysis tabs for detailed insights!", icon="💡")
+        st.warning("Click 'New Simulation' in the sidebar to start a new simulation with different agents or goals.", icon="⚠️")
     # if st.session_state.evaluation_data:
     #     _render_evaluation_section(sidebar_config, behavioral_codes_df)
 

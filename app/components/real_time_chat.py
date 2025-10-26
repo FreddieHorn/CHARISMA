@@ -7,16 +7,6 @@ import time
 log = getLogger(__name__)
 
 def render_real_time_chat(llm_service: CharismaService, config: dict, typing_speed: float = 0.01, thinking_delay: float = 1.0):
-    st.html(
-    """
-    <style>
-        .stChatMessage:has(.chat-assistant) {
-            flex-direction: row-reverse;
-            text-align: right;
-        }
-    </style>
-    """
-    )
     """Render real-time chat interface"""
     conversation_service = ConversationService()
     

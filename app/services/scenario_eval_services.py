@@ -96,8 +96,7 @@ class EntailmentService:
     def _initialize_model(self):
         """Initialize the NLI model"""
         try:
-            with st.spinner("🔄 Loading entailment model...it may take a while..."):
-                self.nli_model = pipeline(
+            self.nli_model = pipeline(
                     task="zero-shot-classification",
                     model=self.model_name,
                     multi_label=False
@@ -184,45 +183,43 @@ class G_EvalService:
     def _initialize_metrics(self):
         """Initialize the G-Eval metrics"""
         try:
-            with st.spinner("🔄 Initializing G-Eval metrics..."):
-                self.open_router_llm = OpenRouterLLM(
-                    client=self.client, 
-                    model_name=self.model_name, 
-                    provider=self.provider
-                )
-                
-                # Initialize coherence metric
-                self.coherence_metric = GEval(
-                    name="Scenario-Coherence",
-                    evaluation_steps=[
-                        "Check if the 'shared_goal' is clearly instantiated in the scenario.",
-                        "Verify that agent roles and goals match what is described in the input.",
-                        "Assess if the scenario flows logically and consistently with no logical contradictions.",
-                        "Evaluate if the scenario maintains consistent character behaviors and motivations.",
-                        "Check if the scenario progression follows a natural and believable sequence."
-                    ],
-                    evaluation_params=[LLMTestCaseParams.INPUT, LLMTestCaseParams.ACTUAL_OUTPUT],
-                    model=self.open_router_llm,
-                    threshold=0.5,
-                    strict_mode=False
-                )
-                
-                # Initialize fluency metric
-                self.fluency_metric = GEval(
-                    name="Scenario-Fluency",
-                    evaluation_steps=[
-                        "Check if the grammar and sentence structure are correct (e.g., no run-ons, fragments, or tense errors).",
-                        "Evaluate punctuation and basic formatting (e.g., proper use of commas, periods, line breaks).",
-                        "Assess whether the text reads smoothly and naturally (i.e., does it flow like native-written English?).",
-                        "Check if vocabulary is appropriate and not overly repetitive or awkward.",
-                        "Judge overall clarity: is the scenario easy to understand from start to end?"
-                    ],
-                    evaluation_params=[LLMTestCaseParams.ACTUAL_OUTPUT],
-                    model=self.open_router_llm,
-                    threshold=0.5,
-                    strict_mode=False
-                )
-                
+            self.open_router_llm = OpenRouterLLM(
+                client=self.client, 
+                model_name=self.model_name, 
+                provider=self.provider
+            )
+            
+            # Initialize coherence metric
+            self.coherence_metric = GEval(
+                name="Scenario-Coherence",
+                evaluation_steps=[
+                    "Check if the 'shared_goal' is clearly instantiated in the scenario.",
+                    "Verify that agent roles and goals match what is described in the input.",
+                    "Assess if the scenario flows logically and consistently with no logical contradictions.",
+                    "Evaluate if the scenario maintains consistent character behaviors and motivations.",
+                    "Check if the scenario progression follows a natural and believable sequence."
+                ],
+                evaluation_params=[LLMTestCaseParams.INPUT, LLMTestCaseParams.ACTUAL_OUTPUT],
+                model=self.open_router_llm,
+                threshold=0.5,
+                strict_mode=False
+            )
+            
+            # Initialize fluency metric
+            self.fluency_metric = GEval(
+                name="Scenario-Fluency",
+                evaluation_steps=[
+                    "Check if the grammar and sentence structure are correct (e.g., no run-ons, fragments, or tense errors).",
+                    "Evaluate punctuation and basic formatting (e.g., proper use of commas, periods, line breaks).",
+                    "Assess whether the text reads smoothly and naturally (i.e., does it flow like native-written English?).",
+                    "Check if vocabulary is appropriate and not overly repetitive or awkward.",
+                    "Judge overall clarity: is the scenario easy to understand from start to end?"
+                ],
+                evaluation_params=[LLMTestCaseParams.ACTUAL_OUTPUT],
+                model=self.open_router_llm,
+                threshold=0.5,
+                strict_mode=False
+            )
             log.info("G-Eval metrics initialized successfully")
         except Exception as e:
             log.error(f"Failed to initialize G-Eval metrics: {e}")
