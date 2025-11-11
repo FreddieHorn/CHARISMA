@@ -30,7 +30,7 @@ def evaluation_prompt(
 
     user_message = f"""
     ### GOAL: ###
-    We aim to investigate attribution theory within the field of social psychology through the simulation of psychologically profiled, role-playing agents. These agents are situated in interpersonal scenarios involving shared and individual goals, enabling the study of how dispositional traits and situational factors interact to shape social behaviour.
+    We aim to explore attribution theory in social psychology by simulating interactions between psychologically profiled, role-playing agents. These agents are situated in interpersonal scenarios involving shared and individual goals. The objective is to analyze how dispositional traits and situational factors interact to shape social behavior.
 
     ### TASK: ###
     Given the following scenario setting, your task is to evaluate the goal achievement in the following conversation between two agents within the following social scenario. In the conversation, each agent attempts to achieve:
@@ -45,16 +45,16 @@ def evaluation_prompt(
 
     Personal Goal Achievement (per agent):
     0:	  Agent made no observable progress or acted counter to their goal.
-    1 – 3:	  Minimal progress or inconsistent pursuit of goal.
-    4 – 6:	  Partial progress; achieved some aspects but with noticeable shortcomings.
-    7 – 9:	  Largely successful with minor limitations.
+    1 - 3:	  Minimal progress or inconsistent pursuit of goal.
+    4 - 6:	  Partial progress; achieved some aspects but with noticeable shortcomings.
+    7 - 9:	  Largely successful with minor limitations.
     10:	  Fully achieved the personal goal as intended in the scenario.
 
     Shared Goal Achievement:
     0:	  The shared goal was not achieved at all; interaction broke down.
-    1 – 3:	  Partial engagement with shared goal but no substantive success.
-    4 – 6:	  Moderate achievement; partial or mixed outcome.
-    7 – 9:	  Substantial progress toward the shared goal.
+    1 - 3:	  Partial engagement with shared goal but no substantive success.
+    4 - 6:	  Moderate achievement; partial or mixed outcome.
+    7 - 9:	  Substantial progress toward the shared goal.
     10:	  Full mutual success in achieving the shared goal.
 
     ### INSTRUCTIONS: ###
@@ -73,6 +73,7 @@ def evaluation_prompt(
 
     ### CONVERSATION: ###
     {conversation}
+
 
     ### OUTPUT FORMAT: ###
     Your response must be a JSON object with the following structure:
