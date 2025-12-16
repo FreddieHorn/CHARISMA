@@ -37,7 +37,6 @@ class AIAgentScenarioPlayer:
     def load_behavioral_codes(self) -> pd.DataFrame:
         """Load behavioral codes from CSV"""
         try:
-            # Update this path to where your CSV file is located
             return pd.read_csv('inputs/behavioral_coding.csv')
         except FileNotFoundError:
             st.warning("Behavioral codes CSV file not found. Behavioral analysis will be disabled.")
@@ -92,7 +91,6 @@ class AIAgentScenarioPlayer:
             render_evaluation_tab(sidebar_config, self.behavioral_codes_df)
     
     def render_footer(self):
-        """Render application footer"""
         st.markdown("---")
         st.caption("CHARISMA © 2025")
     

@@ -2,12 +2,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
-
 # Configuration
 INPUT_FILES = {
-    "Easy": "outputs/scenario_evaluation/easy_scenarios_2.csv",
-    "Medium": "outputs/scenario_evaluation/medium_scenarios_2.csv", 
-    "Hard": "outputs/scenario_evaluation/hard_scenarios_2.csv"
+    "Easy": "outputs/scenario_evaluation/easy_deepseek_scenarios.csv",
+    "Hard": "outputs/scenario_evaluation/hard_deepseek_scenarios.csv"
 }
 OUTPUT_PLOT = "charisma/visualisations/plots/"
 
@@ -30,13 +28,13 @@ for emotion in ['anger', 'fear', 'sadness', 'surprise', 'joy', 'disgust', 'trust
         x='difficulty',
         y=f'{emotion}_mean',
         data=all_data,
-        order=['Easy', 'Medium', 'Hard'],
+        order=['Easy', 'Hard'],
         palette='Set2',
         width=0.5
     )
     plt.title(f'{emotion.capitalize()} Intensity by Difficulty')
     plt.ylabel('Mean Intensity Score')
-    plt.savefig(Path(OUTPUT_PLOT) / f'{emotion}_comparison.png', dpi=300)
+    plt.savefig(Path(OUTPUT_PLOT) / f'{emotion}_comparison_deepseek.png', dpi=300)
     plt.close()
 
 # # 3. Add annotations

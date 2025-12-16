@@ -13,15 +13,12 @@ dependencies = [
     "langchain-core>=0.3.72",
     "seaborn>=0.13.2, <0.14",
     "matplotlib>=3.10.5, <3.11",
-    "transformers>=4.54.1, <4.55",
     "plotly>=6.3.1, <6.4",
+    "statsmodels>=0.14.0, <0.15",
 ]
 
 [dependency-groups]
 dev = [
-    "torch>=2.7.1",
-    "deepeval>=3.3.5,<4.0",
     "scikit-learn>=1.7.1",
-    "sentence-transformers>=5.0.0",
     "streamlit>=1.49.1",
 ]
