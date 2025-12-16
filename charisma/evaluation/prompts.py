@@ -70,7 +70,7 @@ def evaluation_prompt(
 
     ### SCENARIO: ###
     {scenario}
-
+    
     ### CONVERSATION: ###
     {conversation}
 

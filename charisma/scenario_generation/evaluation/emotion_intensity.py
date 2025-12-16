@@ -2,7 +2,13 @@ import csv
 import pandas as pd
 from collections import defaultdict
 from statistics import mean
-from charisma.util import extract_words_from_text
+import re
+def extract_words_from_text(text):
+    """Remove punctuation and convert to lowercase words."""
+    if not isinstance(text, str):
+        return []
+    words = re.findall(r'\b[\w-]+\b', text.lower())
+    return words
 def load_lexicon(
     lexicon_path: str
 )  -> dict:
@@ -111,8 +117,8 @@ def process_scenarios_csv(input_csv_path, output_csv_path, lexicon_path):
 
 if __name__ == "__main__":
     process_scenarios_csv(
-        input_csv_path='goals_deepseek__scenario_generation_medium.csv',
-        output_csv_path='outputs/scenario_evaluation/medium_scenarios.csv',
+        input_csv_path='outputs/goals_deepseek_masters__scenarios_Hard.csv',
+        output_csv_path='outputs/scenario_evaluation/hard_deepseek_scenarios.csv',
         lexicon_path='inputs/NRC-Emotion-Intensity-Lexicon-v1.txt'
     )
     # print(ingest_emotion_intensity_lexicon('inputs/NRC-Emotion-Intensity-Lexicon-v1.txt'))

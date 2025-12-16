@@ -10,18 +10,18 @@ from charisma.util import create_output_path
 
 def run_pipeline(client: OpenAI):
     scen_gen_output_csv_path = create_output_path(
-        config.pipeline.input_csv, f"_scenario_generation_{config.pipeline.scenario_generation.difficulty}"
+        config.pipeline.input_csv, f"_gpt5-mini_scenario_generation"
     )
     # setup_goals(
-    #     output_csv=config.pipeline.setup_goals.output_csv,
-    #     goal_list_csv=config.pipeline.setup_goals.input_csv,
-    #     client=client,
-    #     model_name=config.pipeline.model,
-    #     provider=config.pipeline.provider if config.pipeline.provider else None,
-    #     num_records=config.pipeline.setup_goals.num_records,
-    # )
+    #      output_csv=config.pipeline.setup_goals.output_csv,
+    #      goal_list_csv=config.pipeline.setup_goals.input_csv,
+    #      client=client,
+    #      model_name=config.pipeline.model,
+    #      provider=config.pipeline.provider if config.pipeline.provider else None,
+    #      num_records=config.pipeline.setup_goals.num_records,
+    #  )
     scenario_generation(
-        input_csv=config.pipeline.input_csv,
+        input_csv=config.pipeline.setup_goals.output_csv,
         output_csv=scen_gen_output_csv_path,
         client=client,
         model=config.pipeline.model,
@@ -32,7 +32,7 @@ def run_pipeline(client: OpenAI):
 
 def evaluation(client: OpenAI):
     evaluation_output_csv_path = create_output_path(
-        config.pipeline.evaluation.input_csv, "_evaluation"
+        config.pipeline.evaluation.input_csv, "_evaluation_deepseekv3.1"
     )
     from charisma.evaluation.generation import evaluation
     evaluation(
@@ -45,7 +45,7 @@ def evaluation(client: OpenAI):
 
 def run_interaction_pipeline():
     interaction_gen_output_csv_path = create_output_path(
-        config.pipeline.interaction_generation.scenarios_filepath, "_interaction_generation"
+        config.pipeline.interaction_generation.scenarios_filepath, "_grok-4-fast-interaction_generation"
     )
     interaction_generation(
         charaction_filename=config.pipeline.interaction_generation.characters_filepath,

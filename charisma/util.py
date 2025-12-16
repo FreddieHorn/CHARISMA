@@ -34,7 +34,7 @@ def create_output_path(input_path, output_suffix: str = "_output") -> Path:
 
     new_filename = f"{input_path.stem}_{output_suffix}{input_path.suffix}"
 
-    output_path = input_path.parent.parent / "outputs" / new_filename
+    output_path = input_path.parent.parent / "experiment_1" / new_filename
 
     # Create output directory if it doesn't exist
     output_path.parent.mkdir(parents=True, exist_ok=True)

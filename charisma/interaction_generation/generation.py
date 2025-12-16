@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import logging
 import datetime
 import pytz
-from itertools import combinations
+from itertools import combinations, cycle
 import pandas as pd
 from charisma.util import extract_json_string
 import re
@@ -196,8 +196,10 @@ class RolePlayEngine:
             model_name= model["name"],
             openai_api_base="https://openrouter.ai/api/v1",
             openai_api_key=OPEN_ROUTER_API_KEY,
-            temperature=0.5,
-            # max_tokens=1000,
+            temperature=0.6,
+            max_retries=8,
+            # max_completion_tokens=1500,
+            # max_tokens=5000,
             streaming=False,
             verbose=False,
             extra_body={"provider": provider} if provider else {},
@@ -367,7 +369,7 @@ class RolePlayEngine:
 
     def run(self) -> None:
         # prepare CSV writer
-        output_csv_file = open(self.output_csv, "w", newline="", encoding="utf-8")
+        output_csv_file = open(self.output_csv, "a", newline="", encoding="utf-8")
         fieldnames = [
             "agents",
             "base_shared_goal",
@@ -382,59 +384,90 @@ class RolePlayEngine:
             "interaction_history",
         ]
         writer = csv.DictWriter(output_csv_file, fieldnames=fieldnames)
-        writer.writeheader()
+
+        # write header only if file is empty
+        if output_csv_file.tell() == 0:
+            writer.writeheader()
+
+        # count how many rows already exist (excluding header)
+        try:
+            with open(self.output_csv, "r", encoding="utf-8") as f:
+                existing_rows = sum(1 for _ in f) - 1
+                if existing_rows < 0:
+                    existing_rows = 0
+        except FileNotFoundError:
+            existing_rows = 0
+
+        print(f"Resuming from {existing_rows} completed rows...")
 
         scenarios_data = self.scenarios
-
         character_list = [c["character"] for c in self.characters]
 
-        for idx, row in scenarios_data.iterrows():
-            scenario=ast.literal_eval(row["scenario"])['scenario_context']
-            logging.info(f"\n_______Scenario {idx}: {scenario}_______\n")
+        scenarios_list = scenarios_data.to_dict('records')
+        scenario_cycle = cycle(scenarios_list)
 
-            all_pairs = list(combinations(character_list, 2))
-            random_pairs = random.sample(all_pairs, 5)
-            logging.info(f"PAIRS {random_pairs}_______\n")
+        # skip X scenarios
+        for _ in range(existing_rows):
+            next(scenario_cycle)
 
-            # track which unordered pairs have been executed
-            for character_1, character_2 in random_pairs:
+        # Generate all possible character pairs
+        all_character_pairs = list(combinations(character_list, 2))
+        start_pair_index = existing_rows
+        logging.info(f"Resuming at pair index {start_pair_index} out of {len(all_character_pairs)}")
 
-                for swap in (False, True): 
-                    STORE.clear() # clear the global store for each new turn
-                    agent_a = character_1 if not swap else character_2
-                    agent_b = character_2 if not swap else character_1
-                    history_agenta_key = agent_a
-                    history_agentb_key = agent_b
-                    agents_key = f"{history_agenta_key}-{history_agentb_key}"
-                    logging.info(f"_______Role-playing: {agents_key}_______\n\n")
-                    session_id = f"scenario{idx}_pair{agents_key}"
+        scenario_usage = {i: 0 for i in range(len(scenarios_list))}
 
-                    dialogues_gen = self.role_play(agent_a, agent_b, history_agenta_key, history_agentb_key, session_id, row)
-                    for m in dialogues_gen:
-                        dialogues = m
-                    
-                    self._print_history(session_id, history_agenta_key, history_agentb_key)
-                    agents_list = [history_agenta_key, history_agentb_key]
+        for pair_idx, (character_1, character_2) in enumerate(all_character_pairs):
+            # skip first X pairs
+            if pair_idx < start_pair_index:
+                continue
+            selected_scenario = next(scenario_cycle)
+            scenario_idx = scenarios_list.index(selected_scenario)  # Find the index for tracking
+            scenario_usage[scenario_idx] += 1
+            
+            scenario_context = ast.literal_eval(selected_scenario["scenario"])['scenario_context']
+            logging.info(f"\n_______Pair {pair_idx+1}/{len(all_character_pairs)}: {character_1} & {character_2} with scenario {scenario_idx}: {scenario_context}_______\n")
 
-                    # after all turns, save a record
-                    writer.writerow({
-                        "agents":               f"{agents_list}",
-                        "base_shared_goal":     row["base_shared_goal"],
-                        "social_goal_category": row["social_goal_category"],
-                        "explanation":          row["explanation"],
-                        "shared_goal":          row["shared_goal"],
-                        "first_agent_goal":     row["first_agent_goal"],
-                        "second_agent_goal":    row["second_agent_goal"],
-                        "agent1_role":          row["agent1_role"],
-                        "agent2_role":          row["agent2_role"],
-                        "scenario":             row["scenario"],
-                        "interaction_history":  json.dumps(dialogues),
-                    })
-                    output_csv_file.flush()  # ensure it’s on disk
-                
-                # logging.info("sleep for 30s\n")
-                # sleep to avoid rate limits on OpenRouter
-                time.sleep(30)
+            # for swap in (False, True): 
+            STORE.clear()
+            if random.choice([True, False]):
+                agent_a = character_1
+                agent_b = character_2
+            else:
+                agent_a = character_2
+                agent_b = character_1
+            history_agenta_key = agent_a
+            history_agentb_key = agent_b
+            agents_key = f"{history_agenta_key}-{history_agentb_key}"
+            logging.info(f"_______Role-playing: {agents_key}_______\n\n")
+            session_id = f"pair{agents_key}_scenario{scenario_idx}"
+
+            dialogues_gen = self.role_play(agent_a, agent_b, history_agenta_key, history_agentb_key, session_id, selected_scenario)
+            for m in dialogues_gen:
+                dialogues = m
+            
+            self._print_history(session_id, history_agenta_key, history_agentb_key)
+            agents_list = [history_agenta_key, history_agentb_key]
+
+            writer.writerow({
+                "agents":               f"{agents_list}",
+                "base_shared_goal":     selected_scenario["base_shared_goal"],
+                "social_goal_category": selected_scenario["social_goal_category"],
+                "explanation":          selected_scenario["explanation"],
+                "shared_goal":          selected_scenario["shared_goal"],
+                "first_agent_goal":     selected_scenario["first_agent_goal"],
+                "second_agent_goal":    selected_scenario["second_agent_goal"],
+                "agent1_role":          selected_scenario["agent1_role"],
+                "agent2_role":          selected_scenario["agent2_role"],
+                "scenario":             selected_scenario["scenario"],
+                "interaction_history":  json.dumps(dialogues),
+            })
+            output_csv_file.flush()
+            
+            time.sleep(30)
+
+        # Log scenario usage statistics
+        logging.info(f"Scenario usage: {scenario_usage}")
 
 
         # close the CSV file
