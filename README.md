@@ -1,7 +1,14 @@
 # **CHARISMA**
 
-This repository contains the source code for **CHARISMA** —  
+This repository contains the source code for the framework that powers the **CHARISMA** project —  
 *Character-Based Interaction Simulation with Multi LLM-based Agents Toward Computational Social Psychology.*
+
+**CHARISMA** is a modular framework for **simulating and evaluating goal-directed social interactions** with multi-agent, LLM-driven dialogue.  
+It supports an end-to-end pipeline that:
+- defines **shared and personal goals** (grounded in a goal taxonomy),
+- generates **structured social scenarios** (with controllable properties such as difficulty),
+- simulates **multi-turn dyadic interactions** between character-based agents,
+- and produces **goal-achievement and behavioural evaluations** to enable systematic analysis.
 
 ---
 
