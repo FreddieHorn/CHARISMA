@@ -36,4 +36,4 @@ To start the Streamlit app, run:
 uv run -m streamlit run app/main.py
 ```
 Alternatively, you can visit the hosted version of the app here:
-👉 [https://charisma.streamlit.app/]
+👉 https://charisma.streamlit.app/
