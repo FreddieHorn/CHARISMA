@@ -1,4 +1,4 @@
-# **CHARISMA**
+<img width="6954" height="3590" alt="CHARISMA_Pipeline" src="https://github.com/user-attachments/assets/47482629-28c4-441a-a474-51cf6b07f75c" /># **CHARISMA**
 
 This repository contains the source code for the framework that powers the **CHARISMA** project —  
 *Character-Based Interaction Simulation with Multi LLM-based Agents Toward Computational Social Psychology.*
@@ -9,7 +9,8 @@ It supports an end-to-end pipeline that:
 - generates **structured social scenarios** (with controllable properties such as difficulty),
 - simulates **multi-turn dyadic interactions** between character-based agents,
 - and produces **goal-achievement and behavioural evaluations** to enable systematic analysis.
-
+![CHARISMA Pipeline](https://github.com/user-attachments/assets/0e4ebea1-46d8-41d2-9d3d-50d60aa2b85a)
+*Figure 1: CHARISMA pipeline overview.*
 ---
 
 ## **Project Structure**
